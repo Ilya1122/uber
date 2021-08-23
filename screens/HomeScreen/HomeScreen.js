@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux'
 import { View, SafeAreaView, Image} from 'react-native'
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import NavOptions from '../../components/NavOptions'
-import NavFavourites from '../../components/NavFavourites'
+import NavFavourites from '../../components/NavFavourites/NavFavourites'
 import { setDestination, setOrigin } from '../../slices/navSlice'
 import { styles } from './style'
 
