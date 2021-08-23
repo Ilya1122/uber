@@ -1,17 +1,26 @@
-import React, {useEffect, useRef} from 'react';
-import {StyleSheet, Text, View} from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import tw from "tailwind-react-native-classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {selectDestination, selectOrigin, setTravelTimeInformation} from "../slices/navSlice";
-import MapViewDirections from "react-native-maps-directions";
+import React, { useEffect, useRef } from 'react'
+import MapView, { Marker } from 'react-native-maps'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectDestination, selectOrigin, setTravelTimeInformation } from '../../slices/navSlice';
+import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from '@env'
+import { styles } from './style'
 
 const Map = () => {
     const origin = useSelector(selectOrigin)
     const destination = useSelector(selectDestination)
     const mapRef = useRef(null)
     const dispatch = useDispatch()
+
+    const getTravelTime = async () => {
+        fetch(
+          `https://maps.googleapis.com/maps/api/distancematrix/json?
+                units=imperial&origins=${origin?.description}&destinations=${destination?.description}
+                &key=${GOOGLE_MAPS_APIKEY}`
+        )
+          .then(res => res?.json())
+          .then(data => dispatch(setTravelTimeInformation(data?.rows?.[0]?.elements?.[0])))
+    }
 
     useEffect(() => {
         if (!origin || !destination) return
@@ -24,24 +33,14 @@ const Map = () => {
     useEffect(() => {
         if (!origin || !destination) return
 
-        const getTrabvelTime = async () => {
-            fetch(
-                `https://maps.googleapis.com/maps/api/distancematrix/json?
-                units=imperial&origins=${origin?.description}&destinations=${destination?.description}
-                &key=${GOOGLE_MAPS_APIKEY}`
-            )
-                .then(res => res?.json())
-                .then(data => dispatch(setTravelTimeInformation(data?.rows?.[0]?.elements?.[0])))
-        }
-
-        getTrabvelTime()
+        getTravelTime()
 
     }, [origin, destination, GOOGLE_MAPS_APIKEY])
 
     return (
         <MapView
             ref={mapRef}
-            style={tw`flex-1`}
+            style={styles?.container}
             initialRegion={{
                 latitude: origin?.location?.lat,
                 longitude: origin?.location?.lng,
