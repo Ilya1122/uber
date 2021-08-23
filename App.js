@@ -5,7 +5,7 @@ import {KeyboardAvoidingView, Platform} from "react-native"
 import {NavigationContainer} from "@react-navigation/native"
 import {createStackNavigator} from "@react-navigation/stack"
 import HomeScreen from "./screens/HomeScreen/HomeScreen"
-import MapScreen from './screens/MapScreen'
+import MapScreen from './screens/MapScreen/MapScreen'
 import { store } from './store'
 import 'react-native-gesture-handler'
 
